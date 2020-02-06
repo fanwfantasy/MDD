@@ -1,0 +1,509 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <!-- 引入echarts -->
+  <script type="text/javascript" src="../../incubator-echarts-4.6.0/dist/echarts.min.js"></script>
+  <!-- 引入css文件 -->
+  <link rel="stylesheet" href="../../css/style.css">
+  <!-- 样式 -->
+  <style type="text/css">
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    .title {
+      margin-top: 27px;
+      padding: 0 32px 0 26px;
+    }
+    .title .title-text {
+      color: #fff;
+      font-size: 16px;
+      text-align: left;
+      font-family: 'Arial-BoldMT'
+    }
+    .title .title-subtext {
+      color: #f3f3f3;
+      font-size: 12px;
+      text-align: right;
+      font-family: Arial;
+      font-weight: 700;
+    }
+    .nav {
+      list-style: none;
+      position: absolute;
+      top: 10px;
+      left: 260px;
+      padding: 0;
+      line-height: 30px;
+      color: #fff;
+      font-size: 12px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0px 1px 2px 1px rgba(0,0,0,0.6);
+    }
+    .nav .nav-item {
+      float: left;
+      padding: 0 6px;
+      border-right: 1px solid #122d61;
+      background-color: #1d4083;
+      cursor: pointer;
+    }
+    .nav .nav-item.active {
+      background-color: #4d96f1;
+    }
+    .nav .nav-item:last-child {
+      border-right: none;
+    }
+    #chart {
+      width: 614px;
+      height:413px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="middleBorder">
+    <div class="title">
+      <div class="title-text">Growth by Segment Trend</div>
+      <!-- <div class="title-subtext">As of 2019 Nov</div> -->
+    </div>
+    <ul class="nav">
+      <li class="nav-item active" onClick="switchChart(0)">Sales($)</li>
+      <li class="nav-item" onClick="switchChart(1)">Population</li>
+      <li class="nav-item" onClick="switchChart(2)">Productivity($)</li>
+    </ul>
+    <div id="chart"></div>
+  </div>
+  <script type="text/javascript">
+    var myChart,
+      defaultOpt = {
+        animationDuration: 2000,
+        tooltip: {//鼠标移入
+                    trigger: 'axis',
+                    confine: true,
+                    //                 tooltip_data_map:
+                    // Jan:
+                    // monthName: "2019 January"
+                    // actual_sales: "$277m"
+                    // actual_sales_ly: "$235m"
+                    // sales_forecast: null
+                    // events: (3) ["Olive Oil Launch", "Nutrilite XS Jan Promotion", "Olive Oil Experience"]
+                    formatter: (data) => {
+                        // console.log(data)
+                        var yearThisData = 0;
+                        var yearLastData = 0;
+                        var forecastData = 0;
+
+                        var customer = 0;
+                        var aboPurchasing = 0;
+                        var developingAbo = 0;
+                        var buildingAbo = 0;
+                        var aboLeader = 0;
+                        // var nameShow = "";
+                        // var toolShow = "";
+                        var monthUp = "";
+                        // var yearUp = new Date().getFullYear()
+                        data.map((item, index) => {
+                            // console.log(item.componentIndex)
+                            if ("Customer"==item.seriesName) {
+                              customer = item.data || ""
+
+                            } else if ("ABO (Purchasing Only)"==item.seriesName) {
+                              aboPurchasing = item.data || ""
+
+                            } else if ("Developing ABO"==item.seriesName) {
+                              developingAbo = item.data || ""
+
+                            } else if ("Building ABO"==item.seriesName) {
+                              buildingAbo = item.data || ""
+
+                            } else if ("ABO Leader"==item.seriesName) {
+                              aboLeader = item.data || ""
+
+                            } 
+                            // nameShow = item.name
+                            monthUp = item.axisValue
+                        })
+                        
+                        // if (yearThisData) {
+                        //     var b = parseInt(yearThisData).toString();
+                        //     var len = b.length;
+                        //     if (len <= 3) { yearThisData = b; }
+                        //     var r = len % 3;
+                        //     r > 0 ? yearThisData = b.slice(0, r) + "," + b.slice(r, len).match(/\d{3}/g).join(",") : yearThisData = b.slice(r, len).match(/\d{3}/g).join(",");
+                        // }
+                        // if (yearLastData) {
+                        //     var b = parseInt(yearLastData).toString();
+                        //     var len = b.length;
+                        //     if (len <= 3) { yearLastData = b; }
+                        //     var r = len % 3;
+                        //     r > 0 ? yearLastData = b.slice(0, r) + "," + b.slice(r, len).match(/\d{3}/g).join(",") : yearLastData = b.slice(r, len).match(/\d{3}/g).join(",");
+                        // }
+                        if (customer&&customer>999) {
+                            var b = parseInt(customer).toString();
+                            var len = b.length;
+                            if (len <= 3) { customer = b; }
+                            var r = len % 3;
+                            r > 0 ? customer = b.slice(0, r) + "," + b.slice(r, len).match(/\d{3}/g).join(",") : customer = b.slice(r, len).match(/\d{3}/g).join(",");
+                        }
+                        if (aboPurchasing&&aboPurchasing>999) {
+                            var b = parseInt(aboPurchasing).toString();
+                            var len = b.length;
+                            if (len <= 3) { aboPurchasing = b; }
+                            var r = len % 3;
+                            r > 0 ? aboPurchasing = b.slice(0, r) + "," + b.slice(r, len).match(/\d{3}/g).join(",") : aboPurchasing = b.slice(r, len).match(/\d{3}/g).join(",");
+                        }
+                        if (developingAbo&&developingAbo>999) {
+                            var b = parseInt(developingAbo).toString();
+                            var len = b.length;
+                            if (len <= 3) { developingAbo = b; }
+                            var r = len % 3;
+                            r > 0 ? developingAbo = b.slice(0, r) + "," + b.slice(r, len).match(/\d{3}/g).join(",") : developingAbo = b.slice(r, len).match(/\d{3}/g).join(",");
+                        }
+                        if (buildingAbo&&buildingAbo>999) {
+                            var b = parseInt(buildingAbo).toString();
+                            var len = b.length;
+                            if (len <= 3) { buildingAbo = b; }
+                            var r = len % 3;
+                            r > 0 ? buildingAbo = b.slice(0, r) + "," + b.slice(r, len).match(/\d{3}/g).join(",") : buildingAbo = b.slice(r, len).match(/\d{3}/g).join(",");
+                        }
+                        if (aboLeader&&aboLeader>999) {
+                            var b = parseInt(aboLeader).toString();
+                            var len = b.length;
+                            if (len <= 3) { aboLeader = b; }
+                            var r = len % 3;
+                            r > 0 ? aboLeader = b.slice(0, r) + "," + b.slice(r, len).match(/\d{3}/g).join(",") : aboLeader = b.slice(r, len).match(/\d{3}/g).join(",");
+                        }
+                        
+                        var customerShow = "<div style='color:#4d96f1'>" + "Customer:" + customer + "</div>";
+                        var aboPurchasingShow = "<div style='color:#28ccae'>" + "ABO(Purchasing Only):" + aboPurchasing + "</div>";
+                        var developingAboShow = "<div style='color:#ffa441'>" + "Developing ABO:" + developingAbo + "</div>";
+                        var buildingAboShow = "<div style='color:#eb5653'>" + "Building ABO:" + buildingAbo + "</div>";
+                        var aboLeaderShow = "<div style='color:#f3e126'>" + "ABO Leader:" + aboLeader + "</div>";
+
+
+                        // if (tooltipData && tooltipData[nameShow]) {
+                        //     tooltipData[nameShow].events.map((item, index) => {
+                        //         toolShow += "<div style='display:flex;justify-content: space-between'><span style='color:#f2df3f'>" + "★" + "</span>" + item + "</div>"
+                        //     })
+                        // }
+                        return "<div style='border-bottom:1px solid #ffffff'>" + monthUp + "</div>" + customerShow + aboPurchasingShow+developingAboShow+buildingAboShow+aboLeaderShow;
+                    }
+                },
+        grid: {
+          left: 71,
+          right: 32,
+          bottom: 155,
+          top: 18,
+          containLabel: false
+        },
+        xAxis: [
+          {
+            type: 'category',
+            axisLine: {
+              show: false,
+              lineStyle: {
+                color: '#fff'
+              }
+            },
+            axisTick: {
+              show: false
+            },
+            axisLabel: {
+              margin: 14,
+              fontSize: 14,
+              fontFamily: 'ArialMT'
+            },
+            data: ['Sep', 'Oct', 'Nov', 'Dec','Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', ]
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value',
+            axisLine: {
+              show: false,
+              lineStyle: {
+                color: '#fff'
+              }
+            },
+            axisTick: {
+              show: false
+            },
+            axisLabel: {
+              fontSize: 14,
+              fontFamily: 'ArialMT',
+              formatter: (val)=>{
+                // console.log(sheet)
+                if(sheet==1){
+                  return val / 1000000 + 'm';
+                }else if(sheet==2){
+                  if(val>999){
+                      var b = parseInt(val).toString();
+                       var len = b.length;
+                       if (len <= 3) { val = b; }
+                       var r = len % 3;
+                       r > 0 ? val = b.slice(0, r) + "," + b.slice(r, len).match(/\d{3}/g).join(",") : val = b.slice(r, len).match(/\d{3}/g).join(",");
+                         return val ;
+                    }
+                    return val ;
+                }
+                return val / 1 + 'm';
+              }
+            },
+            splitLine: {
+              lineStyle: {
+                type: 'dashed',
+                color: '#757575'
+              }
+            }
+          }
+        ],
+        color: ['#4d96f1', '#28ccae', '#ffa441', '#eb5653', '#f3e126'],
+        legend: {
+          left: 76,
+          bottom: 78,
+          icon: 'rect',
+          itemWidth: 10,
+          itemHeight: 10,
+          formatter: '{default|{name}}',
+          textStyle: {
+            rich: {
+              default: {
+                width: 120,
+                color: '#fff',
+                fontSize: 12,
+                padding: [-2, 10, 0, 0]
+              }
+            }
+          },
+          data: [
+            'Customer', 
+            {
+              name: 'ABO (Purchasing Only)',
+              textStyle: {
+                padding: [0, 70, 0, 0]
+              }
+            }, 
+            'Developing ABO', 
+            'Building ABO',
+            'ABO Leader'
+          ]
+        }
+      },
+      chartArray = [
+        {
+          series: [
+            {
+              name: 'Customer',
+              type: 'bar',
+              barWidth: 18,
+              stack: 'stack',
+              data: [23.5, 28.2, 19.9,28.1, '', '', '', '', '', '', '','']
+            },
+            {
+              name: 'ABO (Purchasing Only)',
+              type: 'bar',
+              stack: 'stack',
+              data: [  42.9,46.6,35.5,42.8,'', '', '', '', '', '', '','']
+            },
+            {
+              name: 'Developing ABO',
+              type: 'bar',
+              stack: 'stack',
+              data: [67.1,52.1,52.9,55.4,'', '', '', '', '', '', '', '','']
+            },
+            {
+              name: 'Building ABO',
+              type: 'bar',
+              stack: 'stack',
+              data: [88.4,48.2,52.9,56.3,'', '', '', '', '', '', '', '','','','']
+            },
+            {
+              name: 'ABO Leader',
+              type: 'bar',
+              stack: 'stack',
+              data: [ 14.4,8.9,11.9,11.8,'',  '', '', '', '', '', '', '','']
+            }
+          ]
+        }, {
+          series: [
+            {
+              name: 'Customer',
+              type: 'bar',
+              barWidth: 18,
+              stack: 'stack',
+              data: [329071,764391,396833,675400, '', '', '', '', '', '', '','']
+            },
+            {
+              name: 'ABO (Purchasing Only)',
+              type: 'bar',
+              stack: 'stack',
+              data: [354926,490045, 356943, 414241, '', '', '', '', '', '', '','']
+            },
+            {
+              name: 'Developing ABO',
+              type: 'bar',
+              stack: 'stack',
+              data: [179711, 189961,205449,178235 ,'', '', '', '', '', '', '','']
+            },
+            {
+              name: 'Building ABO',
+              type: 'bar',
+              stack: 'stack',
+              data: [92819, 82240,  73543, 80835, '', '', '', '', '','','','']
+            },
+            {
+              name: 'ABO Leader',
+              type: 'bar',
+              stack: 'stack',
+              data: [11829, 11792,11787, 11787,'', '', '', '', '','','','']
+            }
+          ]
+        }, {
+          series: [
+            {
+              name: 'Customer',
+              type: 'line',
+              stack: 'stack',
+              areaStyle: {
+                color: {
+                  type: 'linear',
+                  x: 0,
+                  y: 0,
+                  x2: 0,
+                  y2: 1,
+                  colorStops: [{
+                    offset: 0, color: '#4d96f180'
+                  }, {
+                    offset: 1, color: '#4d96f100'
+                  }],
+                  global: false
+                }
+              },
+              data: [72,37,50,42,  '','', '', '', '', '', '','']
+            },
+            {
+              name: 'ABO (Purchasing Only)',
+              type: 'line',
+              stack: 'stack',
+              areaStyle: {
+                color: {
+                  type: 'linear',
+                  x: 0,
+                  y: 0,
+                  x2: 0,
+                  y2: 1,
+                  colorStops: [{
+                    offset: 0, color: '#28ccae66'
+                  }, {
+                    offset: 1, color: '#28ccae00'
+                  }],
+                  global: false
+                }
+              },
+              data: [121,95,99, 103,'', '', '', '', '', '', '','']
+            },
+            {
+              name: 'Developing ABO',
+              type: 'line',
+              stack: 'stack',
+              areaStyle: {
+                color: {
+                  type: 'linear',
+                  x: 0,
+                  y: 0,
+                  x2: 0,
+                  y2: 1,
+                  colorStops: [{
+                    offset: 0, color: '#ffa4414d'
+                  }, {
+                    offset: 1, color: '#ffa44100'
+                  }],
+                  global: false
+                }
+              },
+              data: [374,274,257,311, '', '', '', '', '', '', '','']
+            },
+            {
+              name: 'Building ABO',
+              type: 'line',
+              stack: 'stack',
+              areaStyle: {
+                color: {
+                  type: 'linear',
+                  x: 0,
+                  y: 0,
+                  x2: 0,
+                  y2: 1,
+                  colorStops: [{
+                    offset: 0, color: '#eb565333'
+                  }, {
+                    offset: 1, color: '#eb565300'
+                  }],
+                  global: false
+                }
+              },
+              data: [953,586, 720,696, '', '', '', '', '','','','']
+            },
+            {
+              name: 'ABO Leader',
+              type: 'line',
+              stack: 'stack',
+              areaStyle: {
+                color: {
+                  type: 'linear',
+                  x: 0,
+                  y: 0,
+                  x2: 0,
+                  y2: 1,
+                  colorStops: [{
+                    offset: 0, color: '#f3e12633'
+                  }, {
+                    offset: 1, color: '#f3e12600'
+                  }],
+                  global: false
+                }
+              },
+              data: [1219,752,1012,1003, '', '', '', '', '', '', '','']
+            }
+          ]
+        }
+      ];
+
+    window.addEventListener('resize', function () {
+      myChart && myChart.resize && myChart.resize();
+    });
+
+    handler();
+
+    function handler() {
+      myChart = echarts.init(document.getElementById('chart'));
+      var idx = 0,
+        option = chartArray[idx];
+      document.querySelector(`.nav-item:nth-child(${idx + 1})`).classList.add('active');
+      myChart.setOption({ ...defaultOpt, ...option });
+    }
+    var sheet = 0;
+    function switchChart(idx) {
+      sheet=idx;
+      var elm = event.currentTarget,
+        elmClassList = elm.classList;
+      if(elmClassList.contains('active')) return false;
+      var parent = elm.parentElement,
+        activeClassList = parent.querySelector('.active').classList;
+      activeClassList.remove('active');
+      elmClassList.add('active');
+      myChart.setOption(chartArray[idx]);
+    }
+  </script>
+</body>
+
+</html>

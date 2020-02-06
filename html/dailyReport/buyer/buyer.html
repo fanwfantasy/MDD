@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <!-- 引入echarts -->
+  <script type="text/javascript" src="../../../incubator-echarts-4.6.0/dist/echarts.min.js"></script>
+  <script type="text/javascript" src="../../../incubator-echarts-4.6.0/map/js/china.js"></script>
+  <!-- 引入css文件 -->
+  <link rel="stylesheet" href="../../../css/style.css">
+  <link rel="stylesheet" href="./css/index.css">
+  <style>
+    .littleName {
+      position: absolute;
+      top: 48px;
+      left: 24px;
+      font-size: 12px;
+      color: #ffffff;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="middleBorder">
+    <p class="smallTitle title-font">Recruitment & Buyer</p>
+    <div class="littleName">as of Feb. 4 2020</div>
+    <div class="main-conent" style="margin-left:118px">
+      <div class="left">
+        <img src="../../../anli UI/1.png" alt="安利汇报图表-第五屏/框-（2）.png" class="img-bg">
+        <div class="left-cont" style="margin-left:118px">
+          <p class="left-font-01">ABO Recruitment</p>
+          <p class="left-font-02">Month to date</p>
+          <div class="left-font-03">
+            <p class="left-n-01">9K</p>
+            <span class="left-n-02">
+              <p>vs LM:&nbsp;<a style="color: #28ccae;">-33%</a></p>
+              <p style="margin-left: -12px;">vs SPLY:&nbsp;<a style="color: #28ccae;">+258% </a></p>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- <img src="../../../anli UI/安利汇报图表-第五屏/箭头（2）.png" alt="" class="ins"> -->
+      <!-- <div class="right" id="right1">
+
+      </div> -->
+    </div>
+
+    <div class="main-conent main-top">
+      <div class="left">
+        <img src="../../../anli UI/1.png" alt="安利汇报图表-第五屏/框-（2）.png" class="img-bg">
+        <div class="left-cont" style="top: 217px;">
+          <p class="left-font-01">Buyer</p>
+          <p class="left-font-02">Month to date</p>
+          <div class="left-font-03">
+            <p class="left-n-01">141K</p>
+            <span class="left-n-02" style="margin-left: 76px;">
+              <p>vs LM:&nbsp;<a style="color: #28ccae;">-83% </a></p>
+              <p style="margin-left: -12px;">vs SPLY:&nbsp;<a style="color: #28ccae;">+120% </a></p>
+            </span>
+          </div>
+        </div>
+      </div>
+      <img src="../../../anli UI/安利汇报图表-第五屏/箭头（2）.png" alt="" class="ins">
+      <div class="right" id="right2">
+
+      </div>
+    </div>
+
+  </div>
+</body>
+<script>
+  var listArr = [document.getElementById('right2')];
+
+  var myChart, option;
+
+  var countData1 = [{
+    value: 4,
+    name: 'PC',
+    itemStyle: {
+      color: '#ffa441',
+    }
+  }, {
+    value: 385,
+    name: 'FOA',
+    itemStyle: {
+      color: '#4d96f1',
+    }
+  }, {
+    value: 38,
+    name: 'ABO',
+    itemStyle: {
+      color: '#28ccae',
+    }
+  },];
+
+  var countData = [{
+    value: 42,
+    name: 'FOA',
+    itemStyle: {
+      color: '#4d96f1'
+    }
+  }, {
+    value: 95,
+    name: 'ABO',
+    itemStyle: {
+      color: '#28ccae'
+    }
+  }, {
+    value: 4,
+    name: 'PC  ',
+    itemStyle: {
+      color: '#ffa441'
+    }
+  }];
+
+  listArr.forEach(function (item, index) {
+    myChart = echarts.init(listArr[index]);
+    var chardata = countData;
+    if (1 == index) {
+      chardata = countData1;
+    }
+    // 指定图表的配置项和数据
+    option = {
+      // 设置
+      tooltip: {
+        show: false,
+        trigger: 'item',
+        formatter: "{a} <br/> {b} : <br/>{c} ({d}%)"
+      },
+      // 系列列表
+      series: [
+        {
+          type: 'pie', // 数据统计图的类型
+          name: 'Month to date($):49m',
+          // minAngle: 5,           　　 //最小的扇区角度（0 ~ 360），用于防止某个值过小导致扇区太小影响交互
+          avoidLabelOverlap: true,   //是否启用防止标签重叠策略
+          radius: '62%',
+          center: ['45%', '50%'],
+          hoverAnimation: false,
+          label: {
+            normal: {
+              formatter(v) {
+                // return '{b| '+v.name+'}  ' + '\n' + '{c|'+v.data.value + 'k}'
+                return v.name + '\n{white|' + v.data.value + 'k}'
+                // return v.name + '\n' + v.data.value + "k"
+              },
+              // padding: [0, 0],
+              rich: {
+                white: {
+                  align: 'left',
+                }
+              }
+            }
+          },
+          labelLine: {
+            show: true,
+            length: 15,
+            length2: 10,
+          },
+          // 放置要展示的数据
+          data: chardata
+        }
+      ]
+    }
+    myChart.setOption(option); // 使用刚指定的配置项和数据显示图表。
+  });
+</script>
+
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- 引入echarts -->
+    <script type="text/javascript" src="../../incubator-echarts-4.6.0/dist/echarts.min.js"></script>
+    <!-- 引入css文件 -->
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .titleBorder {
+            width: 100%;
+            height: 105px;
+            margin-top: 40px;
+            display: flex;
+        }
+
+        .smallTopTitle {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .smallTopTitle div:nth-of-type(1) {
+            font-size: 33px;
+            color: #ffffff;
+            font-family: Silom;
+        }
+
+        .smallTopTitle div:nth-of-type(2) {
+            font-size: 12px;
+            color: #3995da;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="middleBorder">
+        <div class="smallTitle">Referral Commission Amount</div>
+        <div class="titleBorder">
+            <div class="smallTopTitle">
+                <div>$1,061k</div>
+                <div>Today accumulate RC amount</div>
+            </div>
+        </div>
+        <div id="salesHomeEchartsCsi" class="swiper-slide swiper-slide-echarts" style="width: 614px;height:308px;">
+        </div>
+    </div>
+
+
+
+    <script>
+        var xDate = ["1:00", "2:00", "3:00", "4:00", "5:00", "6:00", "7:00", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00"]
+        var today = ["138", "41", "69", "21", "7", "23", "54", "214", "494", "882", "4422", "2579", "2083", "1952", "1948", "2348", "2117", "240", "", "", "", "", "", ""]
+        var lastDay = ["181", "19", "0", "3", "170", "30", "32", "125", "298", "807", "880", "1395", "1299", "1252", "978", "987", "1221", "969", "1094", "1215", "1551", "1334", "1110", "638"]
+
+        handleEcharts();//折线图
+
+        function handleEcharts() {
+            var salesHomeEchartsCsi = echarts.init(document.getElementById('salesHomeEchartsCsi'));
+            window.addEventListener('resize', function () {
+                salesHomeEchartsCsi.resize()
+            });
+            var series = [{
+                name: 'Today',
+                type: 'bar',
+                barWidth: 2,
+                itemStyle: {
+                    normal: {
+                        color: '#0257d4',
+                    }
+                },
+                label: {
+                    show: true,
+                    // position: 'top',
+                    position: ['-10', '-28'],
+                    formatter: function (params) {
+                        var b = parseInt(params.data).toString();
+                        var len = b.length;
+                        if (len <= 3) {
+                            params = b;
+                        } else {
+                            var r = len % 3;
+                            r > 0 ? params = b.slice(0, r) + "," + b.slice(r, len).match(/\d{3}/g).join(",") : params = b.slice(r, len).match(/\d{3}/g).join(",");
+                        }
+                        return params;
+                    },
+                    backgroundColor: 'rgba(49,172,255,0.36)',
+                    borderRadius: 5,
+                    padding: 4,
+                    textStyle: {
+                        fontSize: 8,
+                        color: '#ffffff',
+                    }
+                },
+                data: today,
+            }, {
+                name: "Yesterday",
+                data: lastDay,
+                type: 'line',
+                smooth: true,
+                symbol: "none", //去掉折线点
+                symbolSize: 5, //折线点的大小
+                stack: 100,
+                animationDuration: 2000,
+                itemStyle: {
+                    normal: { //颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+                        color: 'rgba(94,80,230,0.36)', //背景渐变色
+                        lineStyle: { // 系列级个性化折线样式
+                            width: 0.5,
+                            type: 'solid',
+                            color: "rgba(28,213,224,0.36)"//折现颜色
+                        }
+                    },
+                }, //线条样式
+                areaStyle: {
+                    normal: {}
+                },
+            },
+            {
+                symbol: 'circle',
+                symbolSize: 14,
+                symbolOffset: [0, '-50%'],
+                symbolPosition: 'end',
+                name: "Today",
+                type: "pictorialBar",
+                itemStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#31acff'
+                        }, {
+                            offset: 1,
+                            color: '#2e1af1'
+                        }]),
+                    }
+                },
+                xAxisIndex: 0,
+                data: today
+            }
+            ];
+            setTimeout(() => {
+                series.push({
+                    type: 'effectScatter',
+                    coordinateSystem: 'cartesian2d',
+                    data: ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '240', '', '', '', '', '', '', ''], //2d坐标系
+                    symbolSize: 10,
+                    showEffectOn: 'render',
+                    rippleEffect: {
+                        brushType: 'stroke'
+                    },
+                    hoverAnimation: true,
+                    itemStyle: {
+                        normal: {
+                            color: '#0257d4',
+                            shadowBlur: 0,
+                            shadowColor: '#333'
+                        }
+                    },
+                    zlevel: 1
+                });
+                salesHomeEchartsCsi.setOption({ series });
+            }, 2000)
+            salesHomeEchartsCsi.setOption({
+                animationDuration: 2000,
+                // title: [
+                //     {
+                //         text: 'CSI Daily Report',
+                //         x: '8%',
+                //         y: '0%',
+                //         textStyle: {                  //标题样式
+                //             fontSize: '16',
+                //             color: '#ffffff',
+                //         },
+                //     }
+                // ],
+                tooltip: {//鼠标移入
+                    trigger: 'axis',
+                    confine: true,
+                    formatter: (val) => {
+                        var todayDate = 0, yesterday = 0;
+                        var xDate = 0, paramsDate;
+                        val.map((item, index) => {
+                            if (item.data) {
+                                var b = parseInt(item.data).toString();
+                                var len = b.length;
+                                if (len <= 3) {
+                                    paramsDate = b;
+                                } else {
+                                    var r = len % 3;
+                                    r > 0 ? paramsDate = b.slice(0, r) + "," + b.slice(r, len).match(/\d{3}/g).join(",") : paramsDate = b.slice(r, len).match(/\d{3}/g).join(",");
+                                }
+                            } else {
+                                paramsDate = ""
+                            }
+                            if (item.componentIndex == 0) {
+                                todayDate = "<div style='color:#2e1af1;font-size:12px;'>" + "Today:" + paramsDate + "</div>";
+                                xDate = (item.axisValue.split(':')[0]) - 1 + ':00 - ' + item.axisValue
+                            } else if (item.componentIndex == 1) {
+                                yesterday = "<div style='color:rgba(94,80,230);font-size:12px;'>" + "Yesterday:" + paramsDate + "</div>";
+                            }
+                        })
+                        return "<div style='border-bottom:1px solid #ffffff;font-size:12px;'>" + xDate + "</div>" + todayDate + yesterday
+                    }
+                },
+                grid: {
+                    top: '6%',
+                    left: '4%',
+                    right: '4%',
+                    bottom: '30%',
+                    containLabel: true,
+                },
+                xAxis: {
+                    type: 'category',
+                    data: xDate,
+                    axisTick: {
+                        show: false //隐藏X轴刻度
+                    },
+                    axisLine: {
+                        show: false,
+                        lineStyle: {
+                            color: '#757575',
+                            //  width: 3 // 粗细
+                        }
+                    },
+                    boundaryGap: false,//X轴刻度位置
+                    color: '#757575',
+                    axisLabel: {
+                        // interval: 0,//x轴文字显示不全
+                        textStyle: {
+                            fontSize: 9,
+                            color: '#ffffff'
+                        },
+                    }
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        // data:["0","1k","2k","3k","4k","5k","6k","7k"],
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: "#ffffff"
+                            },
+                            formatter: function (params) {
+                                if (params == 0) {
+                                    return 0
+                                } else {
+                                    return params / 1000 + "k"
+                                }
+                            }
+                        },
+
+                        axisTick: {
+                            show: false //隐藏X轴刻度
+                        },
+                        splitLine: {//Y轴的样式虚线
+                            lineStyle: {
+                                type: 'dashed',
+                                color: '#757575'
+                            }
+                        }
+                    }
+                ],
+                series: series,
+                //图例名
+                // color: ['#ffa441', '#4d96f1'],
+                legend: {
+                    type: "scroll",
+                    data: [
+                        { name: "Today", icon: 'image://../../img/6/6.3icon.png' },
+                        { name: "Yesterday", icon: 'image://../../img/6/6.1icon.png' }
+                    ],
+                    left: 'center',
+                    itemWidth: 15,
+                    itemHeight: 15,
+                    itemGap: 200,//图例每项之间的间隔。横向布局时为水平间隔，纵向布局时为纵向间隔。
+                    y: '223',
+                    textStyle: {
+                        color: "#ffffff",
+                        fontSize: 14
+                    },
+                },
+            })
+        }
+    </script>
+</body>
+
+</html>

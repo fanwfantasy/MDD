@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- 引入echarts -->
+    <script type="text/javascript" src="../../incubator-echarts-4.6.0/dist/echarts.min.js"></script>
+    <script type="text/javascript" src="../../incubator-echarts-4.6.0/map/js/china.js"></script>
+    <!--     <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script> -->
+    <!-- 引入css文件 -->
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .sort {
+            position: absolute;
+            top: 25px;
+            /* background: red; */
+            right: 40px;
+            font-size: 14px;
+            width: 14px;
+            height: 18px;
+            text-align: center;
+            z-index: 102;
+        }
+
+        #sortImg {
+            /* background: #5198ee; */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="middleBorder">
+        <div class="smallTitle">PF20 YTD Dec Sales by FC</div>
+        <div class="sort" onClick="sortHandler()"><img src="../../img/tuli/sort.png" id="sortImg" /></div>
+        <div id="histogram" class="swiper-slide swiper-slide-echarts" style="width: 614px;height:413px;"></div>
+    </div>
+
+    <script>
+        var sortBySales = true;
+        var datas = [
+            {
+                fc_group: "周志坚  欧帼英",
+                val: -4.9,
+                total_sales_sum: 93.7,
+                perc_of_total_sales: "12 %",
+                sales_vs_sply: "-5 %",
+                sales_vs_sply_cur: -2345164.868231401
+            }, {
+                fc_group: "陈婉芬  嵇龙生",
+                val: -1.8,
+                total_sales_sum: 51.2,
+                perc_of_total_sales: "7 %",
+                sales_vs_sply: "-3%",
+                sales_vs_sply_cur: -452459.82297089696
+            }, {
+                fc_group: "熊世翔  吴奕",
+                val: -7.7,
+                total_sales_sum: 50.8,
+                perc_of_total_sales: "7 %",
+                sales_vs_sply: "-13 %",
+                sales_vs_sply_cur: -5296393.458032504
+            }, {
+                fc_group: "傅后坚  柯淑真",
+                val: -2.1,
+                total_sales_sum: 45.9,
+                perc_of_total_sales: "6 %",
+                sales_vs_sply: "-4%",
+                sales_vs_sply_cur: -420307.7350932956
+            }, {
+                fc_group: "许旭昇  谢淑芬",
+                val: -3.2,
+                total_sales_sum: 44.2,
+                perc_of_total_sales: "6 %",
+                sales_vs_sply: "-7 %",
+                sales_vs_sply_cur: -1733400.4485523999
+            }, {
+                fc_group: "陈毅鼎  周婉明",
+                val: -5.7,
+                total_sales_sum: 42.9,
+                perc_of_total_sales: "6 %",
+                sales_vs_sply: "-12%",
+                sales_vs_sply_cur: -4000570.8952460997
+            }, {
+                fc_group: "卢宪新  卜范芝",
+                val: -6.5,
+                total_sales_sum: 33.1,
+                perc_of_total_sales: "4 %",
+                sales_vs_sply: "-16 %",
+                sales_vs_sply_cur: -3990928.9143001027
+            }, {
+                fc_group: "金乃刚  王淑真",
+                val: -3.6,
+                total_sales_sum: 29.5,
+                perc_of_total_sales: "4 %",
+                sales_vs_sply: "-11 %",
+                sales_vs_sply_cur: -2386444.938727401
+            }, {
+                fc_group: "周帆扬  郑新清",
+                val: -2.3,
+                total_sales_sum: 28.7,
+                perc_of_total_sales: "4%",
+                sales_vs_sply: "-8%",
+                sales_vs_sply_cur: -1440783.9624000005
+            }, {
+                fc_group: "陈来发  李月容",
+                val: -1.8,
+                total_sales_sum: 26.8,
+                perc_of_total_sales: "3 %",
+                sales_vs_sply: "-6 %",
+                sales_vs_sply_cur: -951797.5713698976
+            }, {
+                fc_group: "任英才  ",
+                val: -2.3,
+                total_sales_sum: 20.7,
+                perc_of_total_sales: "3%",
+                sales_vs_sply: "-10 %",
+                sales_vs_sply_cur: -1428969.9266650993
+            }, {
+                fc_group: "康君  ",
+                val: -1.6,
+                total_sales_sum: 21.3,
+                perc_of_total_sales: "3%",
+                sales_vs_sply: "-7%",
+                sales_vs_sply_cur: -1079899.989153698
+            }, {
+                fc_group: "韩世荣  ",
+                val: 0.5,
+                total_sales_sum: 16.2,
+                perc_of_total_sales: "2 %",
+                sales_vs_sply: "3 %",
+                sales_vs_sply_cur: 377031.68782420084
+            }, {
+                fc_group: "张忆平  ",
+                val: -1.7,
+                total_sales_sum: 16.3,
+                perc_of_total_sales: "2 %",
+                sales_vs_sply: "-9%",
+                sales_vs_sply_cur: -1406604.0746743008
+            }, {
+                fc_group: "雷宇鸣  叶桂花",
+                val: -0.7,
+                total_sales_sum: 15.2,
+                perc_of_total_sales: "2 %",
+                sales_vs_sply: "-4%",
+                sales_vs_sply_cur: -271130.54789680056
+            }, {
+                fc_group: "杜国渊  沈艳",
+                val: -1.1,
+                total_sales_sum: 15.4,
+                perc_of_total_sales: "2 %",
+                sales_vs_sply: "-7%",
+                sales_vs_sply_cur: -732959.7941808999
+            }, {
+                fc_group: "刘红  狄晋",
+                val: -2.3,
+                total_sales_sum: 14.5,
+                perc_of_total_sales: "2 %",
+                sales_vs_sply: "-14 %",
+                sales_vs_sply_cur: -1810779.4190612007
+            }, {
+                fc_group: "郑维良  罗斌",
+                val: -0.9,
+                total_sales_sum: 13.7,
+                perc_of_total_sales: "2 %",
+                sales_vs_sply: "-6 %",
+                sales_vs_sply_cur: -437174.05780480057
+            }, {
+                fc_group: "袁为群  周亚星",
+                val: -0.1,
+                total_sales_sum: 13.1,
+                perc_of_total_sales: "2 %",
+                sales_vs_sply: "1 %",
+                sales_vs_sply_cur: 61830.40435339883
+            }, {
+                fc_group: "何迅  龚玲姬",
+                val: -0.3,
+                total_sales_sum: 13.0,
+                perc_of_total_sales: "2 %",
+                sales_vs_sply: "2 %",
+                sales_vs_sply_cur: 297102.6046266407
+            }, {
+                fc_group: "傅南生  吴彩云",
+                val: -1.3,
+                total_sales_sum: 12.5,
+                perc_of_total_sales: "2 %",
+                sales_vs_sply: "-9 %",
+                sales_vs_sply_cur: -878108.3879023399
+            }, {
+                fc_group: "金梅  刘德沛",
+                val: -0.9,
+                total_sales_sum: 11.6,
+                perc_of_total_sales: "2%",
+                sales_vs_sply: "-7 %",
+                sales_vs_sply_cur: -591966.6046303902
+            }, {
+                fc_group: "黄安莉",
+                val: 3.6,
+                total_sales_sum: 11.2,
+                perc_of_total_sales: "1 %",
+                sales_vs_sply: "47 %",
+                sales_vs_sply_cur: 2933664.2855858495
+            }, {
+                fc_group: "郭洪斌  范建平",
+                val: -2.2,
+                total_sales_sum: 10.9,
+                perc_of_total_sales: "1 %",
+                sales_vs_sply: "-17 %",
+                sales_vs_sply_cur: -1614556.6942544198
+            }, {
+                fc_group: "王寒茹  毛忠",
+                val: -0.8,
+                total_sales_sum: 8.8,
+                perc_of_total_sales: "1 %",
+                sales_vs_sply: "-8 %",
+                sales_vs_sply_cur: -601059.2602422303
+            }, {
+                fc_group: "李丽莉  ",
+                val: 0.4,
+                total_sales_sum: 8.3,
+                perc_of_total_sales: "1 %",
+                sales_vs_sply: "5%",
+                sales_vs_sply_cur: 687609.2068611896
+            }, {
+                fc_group: "梁丁苏  孙东",
+                val: -0.2,
+                total_sales_sum: 7.7,
+                perc_of_total_sales: "1 %",
+                sales_vs_sply: "-3 %",
+                sales_vs_sply_cur: -145034.1582115693
+            }, {
+                fc_group: "尹建平  王成安",
+                val: -0.9,
+                total_sales_sum: 7.2,
+                perc_of_total_sales: "1%",
+                sales_vs_sply: "-11 %",
+                sales_vs_sply_cur: -602194.3848625198
+            }, {
+                fc_group: "葛勇芹  ",
+                val: -0.8,
+                total_sales_sum: 6.8,
+                perc_of_total_sales: "1 %",
+                sales_vs_sply: "-11 %",
+                sales_vs_sply_cur: -566535.2738556005
+            }, {
+                fc_group: "简水兰  ",
+                val: 0.5,
+                total_sales_sum: 4.2,
+                perc_of_total_sales: "1 %",
+                sales_vs_sply: "13 %",
+                sales_vs_sply_cur: 315382.88528743014
+            }, {
+                fc_group: "江芝英  王纪接",
+                val: 0.2,
+                total_sales_sum: 2.6,
+                perc_of_total_sales: "0 %",
+                sales_vs_sply: "6 %",
+                sales_vs_sply_cur: 167500.94390496006
+            }, {
+                fc_group: "朱生才  张盛举",
+                val: 0.3,
+                total_sales_sum: 1.8,
+                perc_of_total_sales: "0 %",
+                sales_vs_sply: "23 %",
+                sales_vs_sply_cur: 231298.86809467012
+            }, {
+                fc_group: "钟光文  何静",
+                val: 0.0,
+                total_sales_sum: 1.2,
+                perc_of_total_sales: "0 %",
+                sales_vs_sply: "2 %",
+                sales_vs_sply_cur: 28196.66710300604
+            }, {
+                fc_group: "AMWAY",
+                val: 2.3,
+                total_sales_sum: 69.0,
+                perc_of_total_sales: "9 %",
+                sales_vs_sply: "3 %",
+                sales_vs_sply_cur: 2298275.9606840014
+            }
+        ];
+
+        var echX = [];
+        var echY = [];
+        var totalSales = [];
+
+        var oldData = {
+            animationDuration: 5000,
+            grid: {
+                top: '80',
+                right: '20',
+                left: '20',
+                bottom: '12%',
+                containLabel: true,
+            },
+            xAxis: [{
+                type: 'category',
+                data: echX,
+                axisLine: {
+                    lineStyle: {
+                        color: 'rgba(255,255,255,0.12)'
+                    }
+                },
+                axisLabel: {
+                    formatter: function (value) {
+                        // 去掉字符串多余的中间的空白
+                        var repStr = "";
+                        for (var i = 0; i < value.length; i++) {
+                            if (value.substring(i, i + 1) != " ")
+                                repStr = repStr + value.substring(i, i + 1);
+                            else {
+                                if (repStr.substring(repStr.length - 1, repStr.length) != " ") {
+                                    repStr = repStr + " ";
+                                }
+                            }
+                        }
+                        return repStr.split("").join("\n")
+                        // return value.split("").join("\n")
+                    },
+                    interval: 0,
+                    color: '#ffffff',
+                    textStyle: {
+                        fontSize: 10
+                    },
+                },
+            }],
+            yAxis: [{
+                axisLabel: {
+                    formatter: (value) => {
+                        // var val = ((value || 0) / 1000000)
+                        return value + "m"
+                    },
+                    color: '#ffffff',
+                },
+                axisLine: {
+                    show: false
+                },
+                axisTick: {
+                    show: false
+                },
+                splitLine: {
+                    lineStyle: {
+                        type: 'dashed',
+                        color: '#757575'
+                    }
+                }
+            }],
+            //图例名
+            color: ["#5198ee", "#17b6a9", "#fd0022"],
+            legend: {
+                type: "scroll",
+                icon: "rect",
+                // itemWidth: 10,
+                // itemHeight: 10,
+                data: [
+                    { name: "Sales by FC Group", icon: 'image://../../img/tuli/1.3sales.jpg' },
+                    { name: "Increase", icon: 'image://../../img/tuli/1.3increase.jpg' },
+                    { name: "Decrease", icon: 'image://../../img/tuli/1.3fail.jpg' },
+                ],
+                // icon: "line",
+                left: 'center',
+                // bottom: 'bottom',
+                y: '375',
+                textStyle: {
+                    color: "#ffffff",
+                    fontSize: 10
+                },
+            }
+        };
+        var histogram,
+            seriesAll = [
+                {
+                    series: [
+                        {
+                            name: "Sales by FC Group",
+                            type: 'bar',
+                            data: totalSales,
+                            barWidth: '10px',
+                            barGap: '-100%', //向左平移100%假装堆叠
+                            // barCategoryGap: '20%',  // 柱形的间距
+                            itemStyle: {
+                                normal: {
+                                    color: "#5198ee",
+                                }
+                            },
+                            label: {
+                                normal: {
+                                    show: true,
+                                    rotate: 0, // 旋转角度
+                                    position: 'top', // 相对位置
+                                    fontSize:8,
+                                    formatter: (value) => {
+                                        // var val = ((value.data || 0) / 1000000).toFixed(1)
+                                        return value.data + "m"
+                                    },
+                                }
+                            }
+                        }, {
+                            name: "Increase",
+                            type: 'bar',
+                            data: echY,
+                            barWidth: '10px',
+                            stack: "one", //同样属性值可以堆叠
+                            // barCategoryGap: '20%',  // 柱形的间距
+                            itemStyle: {
+                                normal: {
+                                    color: (value) => {
+                                        // var val = ((value.data || 0) / 1000000).toFixed(1)
+                                        if (value.data >= 0) {
+                                            return "#17b6a9"
+                                        } else {
+                                            return "#fd0022"
+                                        }
+                                    },
+                                    // barBorderRadius: [30, 30, 30, 30],
+                                    // shadowColor: 'rgba(0,160,221,1)',
+                                    // shadowBlur: 4,
+                                }
+                            },
+                            label: {
+                                normal: {
+                                    show: true,
+                                    rotate: 0, // 旋转角度
+                                    // lineHeight: 30,
+                                    position: 'bottom', // 相对位置
+                                    fontSize: 7,
+                                    // width: 80,
+                                    // height: 30,
+                                    // backgroundColor: 'rgba(0,160,221,0.1)',
+                                    // borderRadius: 200,
+                                    // position: ['-3', '-10'],
+                                    // distance: 1,
+                                    formatter: (value) => {
+                                        // var val = ((value.data || 0) / 1000000).toFixed(1)
+                                        if (value.data >= 0) {
+                                            value = "+" + value.data
+                                        } else {
+                                            value = "-" + value.data
+                                        }
+                                        return value + "m"
+                                    },
+                                }
+                            }
+                        }, {
+                            name: "Decrease",
+                            type: 'bar',
+                            data: [],
+                            stack: "one", //同样属性值可以堆叠
+                            // barGap: '0',//向左平移100%假装堆叠
+                            itemStyle: {
+                                normal: {
+                                    color: "#fd0022",
+                                }
+                            },
+                        }
+                    ]
+                }
+            ];
+
+        var sortFlag = true;
+        sortHandler();
+
+        window.addEventListener('resize', function () {
+            histogram && histogram.resize();
+        });
+
+        function sortHandler() {
+
+            var sortImg = document.getElementById("sortImg");
+            sortFlag = !sortFlag;
+            sortFlag ? sortImg.style.background = "#5198ee" : sortImg.style.background = "none";
+
+            var temp = [...datas];
+            if ((sortBySales = !sortBySales)) {
+                temp.sort((a, b) => b.total_sales_sum - a.total_sales_sum);
+            } else {
+                temp.sort((a, b) => b.val - a.val);
+            }
+            dataHandler(temp);
+        }
+        function dataHandler(temp = datas) {
+            if (!temp || !temp.length) return false;
+            var newEchX = [],
+                newEchY = [],
+                newTotalSales = [];
+            temp.forEach(item => {
+                newEchX.push(item.fc_group);
+                newEchY.push(item.val);
+                newTotalSales.push(item.total_sales_sum);
+            });
+            echX.splice(0, echX.length, ...newEchX);
+            echY.splice(0, echY.length, ...newEchY);
+            totalSales.splice(0, totalSales.length, ...newTotalSales);
+            handler();
+        }
+        function handler() {
+            var seriesData = seriesAll[0];
+            histogram = echarts.init(document.getElementById('histogram'));
+            histogram.setOption({
+                ...oldData,
+                ...seriesData
+            });
+        }
+    </script>
+</body>
+
+</html>

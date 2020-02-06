@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <!-- 引入fishbone-diagram -->
+  <link rel="stylesheet" href="../../fishbone-diagram-1.0.0/css/fishboneDiagram.css">
+  <script type="text/javascript" src="../../fishbone-diagram-1.0.0/js/fishboneDiagram.js"></script>
+  <!-- 引入css文件 -->
+  <link rel="stylesheet" href="../../css/style.css">
+  <!-- 样式 -->
+  <style type="text/css">
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .middleBorder {
+      width: 614px;
+      height: 413px;
+      padding: 28px 30px 20px;
+      background-repeat: no-repeat;
+      background-position: 0 0;
+      background-size: contain;
+      box-sizing: border-box;
+    }
+
+    #diagram {
+      width: 100%;
+      height: 100%;
+    }
+
+    .fishbone-diagram .diagram li:nth-of-type(1) .diagram-item .diagram-item_tagging li {
+      color: #ff0000 !important;
+    }
+
+    .fishbone-diagram .diagram li .diagram-item .diagram-item_tagging li {
+      color: #00b8ac;
+    }
+    .fishbone-diagram .diagram li:nth-of-type(2) .diagram-item .diagram-item_tagging .tagging-rise{
+      color:#ff0000;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="middleBorder">
+    <div id="diagram"></div>
+  </div>
+  <script type="text/javascript">
+    handler();
+
+    function handler() {
+      var myFishboneDiagram = fishboneDiagram.init(document.getElementById('diagram')),
+        option = {
+          title: {
+            text: 'Prediction of PIN Migration for PF20'
+          },
+          subTitle: {
+            tagging: {
+              type: 'rise',
+              value: "2%",
+              valuation: "(1%)"
+            },
+            text: ['Historical PF19 vs PF18', 'Prediction PF19 vs PF18']
+          },
+          legend: {
+            style: {
+              right: '12px',
+              bottom: '26px'
+            },
+            data: ['EDC', 'Diamond', 'Emerald', 'DD', 'GP', 'SP']
+          },
+          diagram: {
+            style: {
+              right: '70px'
+            },
+            data: [{
+              startRange: 76,
+              fishboneFront: false,
+              tagging: {
+                rise: {
+                  value: "10%",
+                  valuation: "(13%)"
+                },
+                fall: {
+                  value: "63%",
+                  valuation: "(62%)"
+                }
+              }
+            }, {
+              tagging: {
+                rise: {
+                  value: "15%",
+                  valuation: "(20%)"
+                },
+                fall: {
+                  value: "49%",
+                  valuation: "(60%)"
+                }
+              }
+            }, {
+              tagging: {
+                rise: {
+                  value: "11%",
+                  valuation: "(1%)"
+                },
+                fall: {
+                  value: "11%",
+                  valuation: "(22%)"
+                }
+              }
+            }, {
+              tagging: {
+                rise: {
+                  value: "9%",
+                  valuation: "(3%)"
+                },
+                fall: {
+                  value: "22%",
+                  valuation: "(28%)"
+                }
+              }
+            }, {
+              tagging: {
+                rise: {
+                  value: "34%",
+                  valuation: "(23%)"
+                },
+                fall: {
+                  value: "21%",
+                  valuation: "(29%)"
+                }
+              }
+            }, {
+              tagging: {
+                fall: {
+                  value: "9%",
+                  valuation: "(13%)"
+                }
+              }
+            }]
+          }
+        };
+      myFishboneDiagram.setOption(option);
+    }
+  </script>
+</body>
+
+</html>
